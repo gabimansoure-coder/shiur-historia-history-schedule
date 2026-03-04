@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>שיעור היסטוריה - מתכונת מלחמה</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="container">
+      <h1>שיעור היסטוריה - מתכונת מלחמה</h1>
+      <p class="subtitle">בחר את הכיתה שלך כדי להציג רק את הקישורים המתאימים</p>
+
+      <div class="controls">
+        <label for="classSelect">בחר כיתה:</label>
+        <select id="classSelect">
+          <option value="">-- בחר כיתה --</option>
+        </select>
+        <button id="showBtn">הצג</button>
+      </div>
+
+      <div id="results" class="results" aria-live="polite"></div>
+
+      <footer>
+        <p>בחר כיתה מהרשימה ואז לחץ על "הצג" כדי לראות רק הקישורים המתאימים.</p>
+      </footer>
+    </main>
+
+    <script>
+      const schedule = [
+        {day:'ראשון', lesson:'1', time:'08:30 – 09:05', className:"י'2 [768]", link:'https://meet.google.com/zxu-wuay-yjm'},
+        {day:'ראשון', lesson:'3', time:'09:50 – 10:25', className:'י"א4 [1049]', link:'https://meet.google.com/cvf-janb-aoe'},
+        {day:'ראשון', lesson:'5', time:'11:15 – 11:50', className:"ט'3 [45]", link:'https://meet.google.com/wxw-mrxq-yog'},
+        {day:'ראשון', lesson:'6', time:'11:55 – 12:30', className:"י'4 [797]", link:'https://meet.google.com/rav-ebpo-fau'},
+        {day:'שני', lesson:'3', time:'09:50 – 10:25', className:"י'3 [786]", link:'https://meet.google.com/bfz-dfai-qcr'},
+        {day:'שני', lesson:'7', time:'12:35 – 13:10', className:"ט'2 [46]", link:'https://meet.google.com/qjo-rudn-kad'},
+        {day:'שלישי', lesson:'3', time:'09:50 – 10:25', className:"י'2 [768]", link:'https://meet.google.com/zxu-wuay-yjm'},
+        {day:'שלישי', lesson:'6', time:'11:55 – 12:30', className:'י"א2 [555]', link:'https://meet.google.com/nzm-pfsm-tmm'},
+        {day:'רביעי', lesson:'1', time:'08:30 – 09:05', className:'י"א1 [545]', link:'https://meet.google.com/ywr-yozv-zvj'},
+        {day:'רביעי', lesson:'4', time:'10:30 – 11:05', className:"י'3 [786]", link:'https://meet.google.com/bfz-dfai-qcr'},
+        {day:'רביעי', lesson:'5', time:'11:15 – 11:50', className:"י'4 [797]", link:'https://meet.google.com/rav-ebpo-fau'},
+        {day:'רביעי', lesson:'6', time:'11:55 – 12:30', className:"י'1 [760]", link:'https://meet.google.com/xdx-vimu-yix'},
+        {day:'חמישי', lesson:'1', time:'08:30 – 09:05', className:"ט'2 [46]", link:'https://meet.google.com/qjo-rudn-kad'},
+        {day:'חמישי', lesson:'2', time:'09:10 – 09:45', className:'י"א3 [1035]', link:'https://meet.google.com/xjg-rvgh-gvy'},
+        {day:'חמישי', lesson:'5', time:'11:15 – 11:50', className:"ט'3 [45]", link:'https://meet.google.com/wxw-mrxq-yog'},
+        {day:'חמישי', lesson:'7', time:'12:35 – 13:10', className:"י'1 [760]", link:'https://meet.google.com/xdx-vimu-yix'}
+      ];
+
+      const classes = Array.from(new Set(schedule.map(s=>s.className))).sort((a,b)=>a.localeCompare(b,'he'));
+      const select = document.getElementById('classSelect');
+      classes.forEach(c=>{
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        select.appendChild(opt);
+      });
+
+      function showResultsForClass(classValue){
+        const results = document.getElementById('results');
+        results.innerHTML = '';
+        const matched = schedule.filter(s=>s.className === classValue);
+        if(!classValue){
+          results.innerHTML = '<p class="muted">לא בחרת כיתה.</p>';
+          return;
+        }
+        if(matched.length === 0){
+          results.innerHTML = '<p class="muted">לא נמצאו שיעורים עבור הכיתה שנבחרה.</p>';
+          return;
+        }
+        const list = document.createElement('ul');
+        matched.forEach(m=>{
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = m.link;
+          a.textContent = `${m.day} — ${m.time} — ${m.className}`;
+          a.target = '_blank';
+          li.appendChild(a);
+          list.appendChild(li);
+        });
+        results.appendChild(list);
+      }
+
+      document.getElementById('showBtn').addEventListener('click', ()=>{
+        showResultsForClass(select.value);
+      });
+    </script>
+  </body>
+</html>
